@@ -15,4 +15,6 @@ class PersonRepository {
         .map { it.copy() }
         .toList()
 
+    fun clear() = people.clear()
+
 }

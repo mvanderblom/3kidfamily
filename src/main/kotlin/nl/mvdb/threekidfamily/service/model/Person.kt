@@ -32,7 +32,7 @@ data class Person(val id: Long, val name: String, val dateOfBirth: LocalDate) {
     val isValid: Boolean
         get() {
             val hasPartner = hasPartner
-            val childrenHaveCommonAncestor = children.haveCommonAncestor(partners.first())
+            val childrenHaveCommonAncestor = children.haveCommonAncestor(partners.firstOrNull())
             val atLeastOneUnder18 = children.any { it.isUnder18 }
             return hasPartner && childrenHaveCommonAncestor && atLeastOneUnder18
         }
@@ -43,4 +43,7 @@ fun MutableSet<Person>.addPerson(person: Person): Boolean {
     return this.add(person)
 }
 
-fun Collection<Person>.haveCommonAncestor(person: Person) = this.all { it.parents.contains(person) }
+fun Collection<Person>.haveCommonAncestor(person: Person?): Boolean {
+    if (person == null) return false
+    return this.all { it.parents.contains(person) }
+}
