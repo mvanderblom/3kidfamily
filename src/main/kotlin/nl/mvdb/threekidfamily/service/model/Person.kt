@@ -23,7 +23,7 @@ data class Person(val id: Long, val name: String, val dateOfBirth: LocalDate) {
             person.addParent(this)
     }
 
-    val age get() = ChronoUnit.YEARS.between(LocalDate.now(), dateOfBirth)
+    val age get() = ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now())
 
     val hasPartner get() = partners.isNotEmpty()
 

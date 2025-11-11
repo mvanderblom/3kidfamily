@@ -1,6 +1,6 @@
 package nl.mvdb.threekidfamily.service.model
 
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -25,8 +25,8 @@ class PersonTest {
     fun `partner relationship is reflexive`() {
         daisy.addPartner(donald)
 
-        Assertions.assertThat(daisy.partners).containsExactly(donald)
-        Assertions.assertThat(donald.partners).containsExactly(daisy)
+        assertThat(daisy.partners).containsExactly(donald)
+        assertThat(donald.partners).containsExactly(daisy)
     }
 
     @Test
@@ -34,9 +34,9 @@ class PersonTest {
         daisy.addPartner(donald)
         daisy.addPartner(donald)
 
-        Assertions.assertThat(daisy.partners).containsExactly(donald)
-        Assertions.assertThat(donald.partners).containsExactly(daisy)
-        Assertions.assertThat(daisy.partners).hasSize(1)
+        assertThat(daisy.partners).containsExactly(donald)
+        assertThat(donald.partners).containsExactly(daisy)
+        assertThat(daisy.partners).hasSize(1)
     }
 
     @Test
@@ -44,8 +44,8 @@ class PersonTest {
         daisy.addChild(heuy)
         heuy.addParent(donald)
 
-        Assertions.assertThat(daisy.children).containsExactly(heuy)
-        Assertions.assertThat(heuy.parents).containsExactly(daisy, donald)
+        assertThat(daisy.children).containsExactly(heuy)
+        assertThat(heuy.parents).containsExactly(daisy, donald)
     }
 
     @Test
@@ -58,7 +58,7 @@ class PersonTest {
         donald.addChild(dewey)
         donald.addChild(louie)
 
-        Assertions.assertThat(listOf(heuy, dewey, louie).haveCommonAncestor(daisy.partners.first())).isTrue
+        assertThat(listOf(heuy, dewey, louie).haveCommonAncestor(daisy.partners.first())).isTrue
     }
 
     @Test
@@ -72,6 +72,11 @@ class PersonTest {
         donald.addChild(heuy)
         donald.addChild(dewey)
 
-        Assertions.assertThat(listOf(heuy, dewey, illegitimateChild).haveCommonAncestor(daisy.partners.first())).isFalse
+        assertThat(listOf(heuy, dewey, illegitimateChild).haveCommonAncestor(daisy.partners.first())).isFalse
+    }
+
+    @Test
+    fun `Age is inferred`() {
+        assertThat(donald.age).isEqualTo(39)
     }
 }
