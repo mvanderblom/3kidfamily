@@ -1,6 +1,9 @@
 package nl.mvdb.threekidfamily.service.model
 
-data class Person(val name: String, val age: Int) {
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
+
+data class Person(val id: Long, val name: String, val dateOfBirth: LocalDate) {
     val partners = mutableSetOf<Person>()
     val parents = mutableSetOf<Person>()
     val children = mutableSetOf<Person>()
@@ -20,9 +23,19 @@ data class Person(val name: String, val age: Int) {
             person.addParent(this)
     }
 
+    val age get() = ChronoUnit.YEARS.between(LocalDate.now(), dateOfBirth)
+
     val hasPartner get() = partners.isNotEmpty()
 
     val isUnder18 get() = age < 18
+
+    val isValid: Boolean
+        get() {
+            val hasPartner = hasPartner
+            val childrenHaveCommonAncestor = children.haveCommonAncestor(partners.first())
+            val atLeastOneUnder18 = children.any { it.isUnder18 }
+            return hasPartner && childrenHaveCommonAncestor && atLeastOneUnder18
+        }
 }
 
 fun MutableSet<Person>.addPerson(person: Person): Boolean {
