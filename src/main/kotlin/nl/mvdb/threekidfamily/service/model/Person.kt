@@ -23,16 +23,14 @@ data class Person(val id: Long, val name: String, val dateOfBirth: LocalDate) {
             person.addParent(this)
     }
 
-    val age get() = ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now())
-
     val hasPartner get() = partners.isNotEmpty()
 
-    val isUnder18 get() = age < 18
+    val age = ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now())
 
     val isValid: Boolean
         get() {
             val childrenHaveCommonAncestor = children.haveCommonAncestor(partners.firstOrNull())
-            val atLeastOneUnder18 = children.any { it.isUnder18 }
+            val atLeastOneUnder18 = children.any { it.age < 18 }
             return hasPartner && childrenHaveCommonAncestor && atLeastOneUnder18
         }
 }

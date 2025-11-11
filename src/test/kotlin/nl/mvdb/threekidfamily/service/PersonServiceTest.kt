@@ -102,15 +102,27 @@ class PersonServiceTest {
                 birthDate = LocalDate.now().minusYears(39),
                 children = listOf(PersonRefDto(3), PersonRefDto(4), PersonRefDto(5))
             ),
-            PersonDto(
-                id = 2,
-                name = "Daisy",
-                birthDate = LocalDate.now().minusYears(39),
-                children = listOf(PersonRefDto(3), PersonRefDto(4), PersonRefDto(5))
-            ),
             PersonDto(3, "Heuy", LocalDate.now().minusYears(6))
         )
 
         assertThat(personService.getAllValid()).hasSize(2)
+    }
+
+    @Test
+    fun `auto repair`() {
+        personService.store(
+            PersonDto(
+                id = 1,
+                name = "Donald",
+                birthDate = LocalDate.now().minusYears(39),
+                children = listOf(PersonRefDto(3))
+            ),
+            PersonDto(3, "Heuy", LocalDate.now().minusYears(6))
+        )
+
+        val people = personService.getAll()
+        assertThat(people).hasSize(2)
+        assertThat(people[0].children).hasSize(1)
+        assertThat(people[1].parents).hasSize(1)
     }
 }
