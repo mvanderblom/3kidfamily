@@ -31,7 +31,6 @@ data class Person(val id: Long, val name: String, val dateOfBirth: LocalDate) {
 
     val isValid: Boolean
         get() {
-            val hasPartner = hasPartner
             val childrenHaveCommonAncestor = children.haveCommonAncestor(partners.firstOrNull())
             val atLeastOneUnder18 = children.any { it.isUnder18 }
             return hasPartner && childrenHaveCommonAncestor && atLeastOneUnder18
