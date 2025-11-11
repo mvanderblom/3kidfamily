@@ -1,5 +1,7 @@
 package nl.mvdb.threekidfamily
 
+import nl.mvdb.threekidfamily.service.model.Person
+import nl.mvdb.threekidfamily.service.model.haveCommonAncestor
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

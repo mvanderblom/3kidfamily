@@ -1,5 +1,6 @@
 package nl.mvdb.threekidfamily
 
+import nl.mvdb.threekidfamily.service.PersonValidationService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

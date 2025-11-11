@@ -1,4 +1,4 @@
-package nl.mvdb.threekidfamily
+package nl.mvdb.threekidfamily.service.model
 
 data class Person(val name: String, val age: Int) {
     val partners = mutableSetOf<Person>()

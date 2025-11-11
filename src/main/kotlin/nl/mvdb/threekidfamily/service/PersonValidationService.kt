@@ -1,5 +1,7 @@
-package nl.mvdb.threekidfamily
+package nl.mvdb.threekidfamily.service
 
+import nl.mvdb.threekidfamily.service.model.Person
+import nl.mvdb.threekidfamily.service.model.haveCommonAncestor
 import org.springframework.stereotype.Component
 
 @Component
@@ -27,7 +29,7 @@ class PersonValidationService {
 
     fun isValid(name: String): Boolean {
         val person = requireNotNull(people.find { it.name == name }) { "Person not found" }
-        
+
         val hasPartner = person.hasPartner
         val childrenHaveCommonAncestor = person.children.haveCommonAncestor(person.partners.first())
         val atLeastOneUnder18 = person.children.any { it.age < 18 }
