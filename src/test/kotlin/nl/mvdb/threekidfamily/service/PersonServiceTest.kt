@@ -85,4 +85,32 @@ class PersonServiceTest {
         assertThat(allValidPeople).hasSize(2)
         assertThat(allValidPeople.map(Person::name)).containsExactlyInAnyOrder(donaldDto.name, daisyDto.name)
     }
+
+    @Test
+    fun `minimal set of valid people`() {
+        personService.store(
+            PersonDto(
+                id = 1,
+                name = "Donald",
+                birthDate = LocalDate.now().minusYears(39),
+                partner = PersonRefDto(2),
+                children = listOf(PersonRefDto(3), PersonRefDto(4), PersonRefDto(5))
+            ),
+            PersonDto(
+                id = 2,
+                name = "Daisy",
+                birthDate = LocalDate.now().minusYears(39),
+                children = listOf(PersonRefDto(3), PersonRefDto(4), PersonRefDto(5))
+            ),
+            PersonDto(
+                id = 2,
+                name = "Daisy",
+                birthDate = LocalDate.now().minusYears(39),
+                children = listOf(PersonRefDto(3), PersonRefDto(4), PersonRefDto(5))
+            ),
+            PersonDto(3, "Heuy", LocalDate.now().minusYears(6))
+        )
+
+        assertThat(personService.getAllValid()).hasSize(2)
+    }
 }
