@@ -53,10 +53,45 @@ class PersonTest {
         go.addChild(wende)
         go.addChild(siebe)
         go.addChild(bo)
-        tijn.addPartner(go)
         tijn.addChild(wende)
         tijn.addChild(siebe)
         tijn.addChild(bo)
     }
 
+    @Test
+    fun `All kids have a common ancestor`() {
+        val go = Person("Go", 40)
+        val tijn = Person("Tijn", 39)
+        val wende = Person("Wende", 6)
+        val siebe = Person("Siebe", 4)
+        val bo = Person("Bo", 4)
+
+        go.addPartner(tijn)
+        go.addChild(wende)
+        go.addChild(siebe)
+        go.addChild(bo)
+        tijn.addChild(wende)
+        tijn.addChild(siebe)
+        tijn.addChild(bo)
+
+        assertThat(listOf(wende, siebe, bo).haveCommonAncestor(go.partners.first())).isTrue
+    }
+
+    @Test
+    fun `All kids have a common ancestor - illegitimate child`() {
+        val go = Person("Go", 40)
+        val tijn = Person("Tijn", 39)
+        val wende = Person("Wende", 6)
+        val siebe = Person("Siebe", 4)
+        val illegitimateChild = Person("Illegitimate child", 4)
+
+        go.addPartner(tijn)
+        go.addChild(wende)
+        go.addChild(siebe)
+        go.addChild(illegitimateChild)
+        tijn.addChild(wende)
+        tijn.addChild(siebe)
+
+        assertThat(listOf(wende, siebe, illegitimateChild).haveCommonAncestor(go.partners.first())).isFalse
+    }
 }
