@@ -24,7 +24,18 @@ data class PersonDto(
     )
 }
 
-fun List<Person>.toDto(): List<PersonDto> {
-    TODO("Not yet implemented")
+fun List<Person>.toDto(): List<PersonDto> = this.map(Person::toDto)
+
+private fun Person.toDto(): PersonDto {
+    val (parent1, parent2) = parents.toList()
+    return PersonDto(
+        id = id,
+        name = name,
+        birthDate = dateOfBirth,
+        parent1 = PersonRefDto(parent1.id),
+        parent2 = PersonRefDto(parent2.id),
+        partner = partners.firstOrNull()?.let { PersonRefDto(it.id) },
+        children = children.map { PersonRefDto(it.id) }
+    )
 }
 
