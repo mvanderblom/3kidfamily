@@ -1,6 +1,7 @@
 package nl.mvdb.threekidfamily.service
 
 import nl.mvdb.threekidfamily.data.PersonRepository
+import nl.mvdb.threekidfamily.data.model.PersonEntity
 import nl.mvdb.threekidfamily.service.model.Person
 import nl.mvdb.threekidfamily.web.model.PersonDto
 import org.springframework.stereotype.Component
@@ -15,11 +16,9 @@ class PersonService(
 
     fun getAll(): List<Person> {
         val allPeopleEntities = personRepository.findAll()
+        val allPeopleById = getAllPeopleById(allPeopleEntities)
 
-        val allPeopleById: Map<Long, Person> = allPeopleEntities
-            .associate { it.id to Person(it.id, it.name, it.dateOfBirth) }
-
-        return allPeopleEntities.map {
+        allPeopleEntities.forEach {
             val person = requireNotNull(allPeopleById[it.id]) { "WTF!?" }
             it.children
                 .mapNotNull { (childId) -> allPeopleById[childId] }
@@ -36,6 +35,23 @@ class PersonService(
             person
         }
 
+        return allPeopleById.values.toList()
+
+    }
+
+    private fun getAllPeopleById(allPeopleEntities: List<PersonEntity>): MutableMap<Long, Person> {
+        val allPeopleById = allPeopleEntities
+            .associate { it.id to Person(it.id, it.name, it.dateOfBirth) }
+            .toMutableMap()
+
+        val topLevelPersonIds = allPeopleById.keys
+        allPeopleEntities
+            .flatMap { it.children }
+            .distinct()
+            .filter { topLevelPersonIds.contains(it.id).not() }
+            .forEach { allPeopleById[it.id] = Person(it.id) }
+
+        return allPeopleById
     }
 
     fun getAllValid() = getAll()

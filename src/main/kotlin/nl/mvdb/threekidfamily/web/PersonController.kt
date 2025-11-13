@@ -6,7 +6,9 @@ import nl.mvdb.threekidfamily.web.model.toDto
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -17,8 +19,11 @@ private const val HTTP_STATUS_NO_RESPONSE = 444
 class PersonController(
     private val personService: PersonService,
 ) {
+    @GetMapping
+    fun getAll(): List<PersonDto> = personService.getAll().toDto()
+
     @PostMapping
-    fun storeAndValidate(person: PersonDto): ResponseEntity<List<PersonDto>> {
+    fun storeAndValidate(@RequestBody person: PersonDto): ResponseEntity<List<PersonDto>> {
         val storeAndValidate = personService.storeAndValidate(person)
 
         if (storeAndValidate.isEmpty())

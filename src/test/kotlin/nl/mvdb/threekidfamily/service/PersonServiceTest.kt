@@ -106,6 +106,7 @@ class PersonServiceTest {
         )
 
         assertThat(personService.getAllValid()).hasSize(2)
+        assertThat(personService.getAll()).hasSize(5)
     }
 
     @Test

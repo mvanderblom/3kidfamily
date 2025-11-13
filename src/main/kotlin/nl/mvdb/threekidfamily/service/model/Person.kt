@@ -3,7 +3,7 @@ package nl.mvdb.threekidfamily.service.model
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-data class Person(val id: Long, val name: String, val dateOfBirth: LocalDate) {
+data class Person(val id: Long, val name: String? = null, val dateOfBirth: LocalDate? = null) {
     val partners = mutableSetOf<Person>()
     val parents = mutableSetOf<Person>()
     val children = mutableSetOf<Person>()
@@ -25,13 +25,13 @@ data class Person(val id: Long, val name: String, val dateOfBirth: LocalDate) {
 
     val hasPartner get() = partners.isNotEmpty()
 
-    val age = ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now())
+    val age = dateOfBirth?.let { ChronoUnit.YEARS.between(it, LocalDate.now()) } ?: -1
 
     val isValid: Boolean
         get() {
             val childrenHaveCommonAncestor = children.haveCommonAncestor(partners.firstOrNull())
             val atLeastOneUnder18 = children.any { it.age < 18 }
-            return hasPartner && childrenHaveCommonAncestor && atLeastOneUnder18
+            return hasPartner && children.size == 3 && childrenHaveCommonAncestor && atLeastOneUnder18
         }
 }
 

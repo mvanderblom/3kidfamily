@@ -6,8 +6,8 @@ import java.time.LocalDate
 
 data class PersonDto(
     val id: Long,
-    val name: String,
-    val birthDate: LocalDate,
+    val name: String? = null,
+    val birthDate: LocalDate? = null,
     val parent1: PersonRefDto? = null,
     val parent2: PersonRefDto? = null,
     val partner: PersonRefDto? = null,
@@ -27,15 +27,21 @@ data class PersonDto(
 fun List<Person>.toDto(): List<PersonDto> = this.map(Person::toDto)
 
 private fun Person.toDto(): PersonDto {
-    val (parent1, parent2) = parents.toList()
+    val parents = parents.toList()
+    val parent1 = parents.firstOrNull()
+    val parent2 = parents.secondOrNull()
     return PersonDto(
         id = id,
         name = name,
         birthDate = dateOfBirth,
-        parent1 = PersonRefDto(parent1.id),
-        parent2 = PersonRefDto(parent2.id),
+        parent1 = parent1?.let { PersonRefDto(it.id) },
+        parent2 = parent2?.let { PersonRefDto(it.id) },
         partner = partners.firstOrNull()?.let { PersonRefDto(it.id) },
         children = children.map { PersonRefDto(it.id) }
     )
 }
 
+private fun <T> List<T>.secondOrNull(): T? {
+    if (this.size > 1) return this[1]
+    return null
+}
